@@ -1,7 +1,17 @@
 import express from "express";
 const router = express.Router();
-import { authUser } from "../controllers/user-controllers.js";
+import {
+  authUser,
+  registerUser,
+  logoutUser,
+  getUserProfile,
+  updateUserProfile,
+} from "../controller/user-controller.js";
 
-router.use("/auth", authUser);
 
+router.post("/", registerUser);
+router.post("/auth", authUser);
+router.post("/logout", logoutUser);
+/** this is how we chain our request if we have same url but different type of requests */
+router.route("/profile").get(getUserProfile).put(updateUserProfile);
 export default router;
