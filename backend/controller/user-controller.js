@@ -1,13 +1,14 @@
 import asyncHandler from "express-async-handler";
 import User from "../model/user-model.js";
 import generateToken from "../utils/generate-token.js";
+
 /**
  * Auth user/set token
  * route POST api/user/auth
  */
 
 const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body; 
   const user = await User.findOne({ email });
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
@@ -41,8 +42,13 @@ const registerUser = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "register user" });
 });
 
-const logoutUser = asyncHandler((req, res) => {
-  res.status(200).json({ message: "logout user" });
+const logoutUser = asyncHandler(async (req, res) => {
+  console.log(res)
+  res.cookie('jwt','',{
+    httpOnly:true,
+    expires: new Date(0)
+  })
+  res.status(200).json({ message: "User logged user" });
 });
 
 const getUserProfile = asyncHandler((req, res) => {
