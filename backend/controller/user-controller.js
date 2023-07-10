@@ -8,7 +8,7 @@ import generateToken from "../utils/generate-token.js";
  */
 
 const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body; 
+  const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
@@ -43,16 +43,20 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  console.log(res)
-  res.cookie('jwt','',{
-    httpOnly:true,
-    expires: new Date(0)
-  })
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
   res.status(200).json({ message: "User logged user" });
 });
 
 const getUserProfile = asyncHandler((req, res) => {
-  res.status(200).json({ message: "user profile" });
+  const user = {
+    id: req.user.id,
+    name: req.user.name,
+    email: req.user.email,
+  };
+  res.status(200).json({ message: "user profile", data: user });
 });
 
 const updateUserProfile = asyncHandler((req, res) => {
